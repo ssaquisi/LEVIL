@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVIL - Prototipo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="mobile-frame">
+        
+        <div id="view-auth" class="view active">
+            <div class="auth-container">
+                <h1 class="brand-logo-large">LEVIL</h1>
+                <p class="brand-slogan">Lectura que transforma.</p>
+
+                <div id="form-login">
+                    <input type="text" id="login-user" class="input-field" placeholder="Nombre de usuario">
+                    <input type="password" id="login-pass" class="input-field" placeholder="Contraseña">
+                    <button class="btn-main" onclick="Auth.login()">INICIAR SESIÓN</button>
+                    <p class="auth-switch" onclick="Auth.toggleForm()">¿No tienes cuenta? <span>Regístrate aquí</span></p>
+                </div>
+
+                <div id="form-register" class="hidden">
+                    <input type="text" id="reg-user" class="input-field" placeholder="Nuevo Usuario">
+                    <input type="password" id="reg-pass" class="input-field" placeholder="Nueva Contraseña">
+                    <button class="btn-main btn-secondary" onclick="Auth.register()">CREAR CUENTA</button>
+                    <p class="auth-switch" onclick="Auth.toggleForm()">¿Ya tienes cuenta? <span>Inicia sesión</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-dashboard" class="view">
+            <div class="header">
+                <div class="brand-logo-small">LEVIL</div>
+                <div id="dash-avatar" class="user-avatar-small" onclick="Nav.to('view-profile')"></div>
+            </div>
+
+            <div class="filter-scroll">
+                <div class="filter-pill active" onclick="Books.filter('Todos', this)">Todos</div>
+                <div class="filter-pill" onclick="Books.filter('Hábitos', this)">Hábitos</div>
+                <div class="filter-pill" onclick="Books.filter('Estrategia', this)">Estrategia</div>
+                <div class="filter-pill" onclick="Books.filter('Resiliencia', this)">Resiliencia</div>
+            </div>
+
+            <div class="book-grid" id="books-container"></div>
+        </div>
+
+        <div id="view-detail" class="view">
+            <div class="header">
+                <button class="btn-icon" onclick="Nav.back()"><i class="fas fa-arrow-left"></i></button>
+                <span>Detalle</span>
+                <button class="btn-icon" onclick="User.toggleFavorite()"><i id="fav-icon" class="far fa-heart"></i></button>
+            </div>
+
+            <div class="detail-hero">
+                <img id="detail-img" src="" class="detail-cover">
+                <h2 id="detail-title" style="margin-top: 15px;">Título</h2>
+                <p id="detail-author">Autor</p>
+                <div id="detail-badge" class="skill-badge-large"></div>
+            </div>
+
+            <div class="audio-player" onclick="AudioPlayer.toggle()">
+                <div class="play-circle"><i id="audio-icon" class="fas fa-play"></i></div>
+                <div class="audio-info">
+                    <div class="audio-label">AUDIO HOOK</div>
+                    <div class="audio-desc">¿Por qué leer este libro? (1:30)</div>
+                </div>
+            </div>
+            
+            <div class="synopsis-box">
+                <h4>Sinopsis</h4>
+                <p id="detail-desc">Descripción del libro...</p>
+            </div>
+
+            <h3 class="section-header">Capítulos Disponibles</h3>
+            <div class="chapter-list" id="chapter-list"></div>
+
+            <audio id="real-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+        </div>
+
+        <div id="view-reader" class="view">
+            <div class="header">
+                <button class="btn-icon" onclick="Nav.back()"><i class="fas fa-times"></i></button>
+                <span id="reader-chapter-title" class="truncate-text">Capítulo</span>
+                <button class="btn-icon">Aa</button>
+            </div>
+
+            <div id="reader-content" class="reader-text"></div>
+
+            <div class="chapter-navigation">
+                <button id="prev-chapter-btn" class="nav-chapter-btn" onclick="Reader.prevChapter()">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <button id="next-chapter-btn" class="nav-chapter-btn" onclick="Reader.nextChapter()">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="journal-drawer minimized" id="journal-drawer">
+                <div class="drawer-handle" onclick="Journal.toggle()"></div>
+                <h4 class="journal-title"><i class="fas fa-pen"></i> Bitácora de Aprendizaje</h4>
+                <textarea id="journal-input" class="journal-input" placeholder="Escribe tu reflexión aquí..."></textarea>
+                <button class="btn-save" onclick="Journal.save()">GUARDAR NOTA</button>
+                <div id="journal-success" class="success-message">Guardado con éxito</div>
+            </div>
+        </div>
+
+        <div id="view-profile" class="view">
+            <div class="header">
+                <button class="btn-icon" onclick="Nav.back()"><i class="fas fa-arrow-left"></i></button>
+                <span>Mi Perfil</span>
+                <button class="btn-icon" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <div class="profile-section">
+                <div id="profile-pic" class="profile-pic-large" onclick="document.getElementById('file-input').click()"></div>
+                <input type="file" id="file-input" accept="image/*" onchange="User.handleImageUpload(event)">
+                <div class="profile-actions">
+                    <input type="text" id="edit-name" class="edit-name-input">
+                    <button class="btn-small" onclick="User.updateProfile()">Guardar Cambios</button>
+                    <div id="profile-success" class="success-message">Guardado con éxito</div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-heart"></i> Mis Favoritos</h3>
+            <div id="fav-list" class="list-container"></div>
+
+            <h3><i class="fas fa-sticky-note"></i> Mis Anotaciones</h3>
+            <div id="notes-list" class="list-container"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
